@@ -1,5 +1,6 @@
 from pony.orm import *
 from functools import partial
+from pprint import pprint
 import json
 import os
 
@@ -38,33 +39,53 @@ db.bind("sqlite",
         )
 db.generate_mapping(create_tables=True)
 
-
 def seed():
-    """
-    Seed the database.
-    """
 
-    votes_list = [
-        {
-            'name': 'Tinder for pets',
-            'count': 0,
-        },
-        {
-            'name': 'Giant hamster wheel power generator',
-            'count': 0,
-        },
-        {
-            'name': 'Facebook for babies',
-            'count': 0,
-        },
-    ]
-
+    # seed the initial database Event with stupid things
     try:
         with db_session:
             event = Event(name="Terrible ideas hackathon")
-            votes = [Vote(event=event, **v) for v in votes_list]
-    except pony.orm.core.TransactionIntegrityError as e:
-        print(e)
+            [Vote(event=event, name=n, count=0) for n in (
+                "Tinder for pets",
+                "Facebook for babies",
+                "Giant hamster wheel power generator",
+            )]
+    except Exception:
+        pass
+
+    # seed the rest of the events with more substantial information
+    from faker import Faker
+    import random
+    fake = Faker()
+    event_number = 10
+    events = [
+        {
+            "name": "Best {} contest.".format(fake.job()),
+        } for _ in range(event_number)
+    ]
+    for e in events:
+        votes = [
+            {
+                "name": fake.name(),
+                "count": random.choice(range(11)),
+            } for _ in range(10)
+        ]
+        # pprint(e)
+        # pprint(votes)
+        # print('-'*80)
+        # seed the database
+        for v in votes:
+            try:
+                with db_session:
+                    event = Event.get(**e) if Event.get(**e) else Event(**e)
+                    # print(event)
+                    vote = Vote(event=event, **v)
+            except Exception as exc:
+                # print("could not create elements in database")
+                # print('Event: {}\nVote: {}'.format(e, v))
+                # print(exc)
+                continue
+
 
 
 # define database transaction functions
