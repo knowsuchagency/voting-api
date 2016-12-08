@@ -193,7 +193,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    fp = os.path.join(os.getcwd(), 'root.md')
+    fp = os.path.join(os.path.dirname(__file__), 'root.md')
     with open(fp) as md:
         msg = md.read()
     return markdown.markdown(msg)
