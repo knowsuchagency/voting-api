@@ -193,20 +193,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    msg = dedent("""
-    ## Welcome to to the voting api.
-
-    GET /event/ -> Returns all events
-
-    GET /event/{event_id} -> Returns a specific event
-
-    GET /vote/ -> Returns all votes
-
-    GET /vote/{voted_id} -> Returns a specific vote
-
-    """)
-
-    return markdown.markdown(msg)
+    with open('root.md') as fp:
+        return markdown.markdown(fp.read())
 
 
 @app.route('/vote/', methods=['GET', 'POST'])
