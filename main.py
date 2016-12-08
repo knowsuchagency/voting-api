@@ -201,7 +201,7 @@ def vote_route(vote_id=None):
         if action == 'increment':
             return increment(vote_id)
         elif action == 'decrement':
-            return increment(vote_id)
+            return decrement(vote_id)
         elif action == 'reset':
             return reset(vote_id=vote_id)
 
