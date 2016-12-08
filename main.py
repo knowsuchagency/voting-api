@@ -213,7 +213,7 @@ def event_root():
 
 
 @app.route('/event/<int:event_id>', methods=['GET', 'POST', 'DELETE'])
-def specific_event(event_id=None):
+def specific_event(event_id):
     if request.method == 'GET':
         return get_event(event_id)
     elif request.method == 'DELETE':
@@ -235,7 +235,7 @@ def vote_root():
 
 
 @app.route('/vote/<int:vote_id>', methods=['GET', 'POST', 'DELETE'])
-def specific_vote(vote_id=None):
+def specific_vote(vote_id):
     if request.method == 'GET':
         return get_vote(vote_id)
     elif request.method == 'DELETE':
