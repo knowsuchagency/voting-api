@@ -1,6 +1,7 @@
 from pony.orm import *
 from functools import partial
 import json
+import os
 
 # make all json serializations indent by default
 json.dumps = partial(json.dumps, indent=2)
@@ -185,7 +186,6 @@ def reset(vote_id=None, event_id=None):
 
 # Set up flask
 from flask import Flask, request
-from textwrap import dedent
 import markdown
 
 app = Flask(__name__)
@@ -193,8 +193,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    with open('root.md') as fp:
-        msg = fp.read()
+    fp = os.path.join(os.getcwd(), 'root.md')
+    with open(fp) as md:
+        msg = md.read()
     return markdown.markdown(msg)
 
 
