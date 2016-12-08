@@ -127,15 +127,18 @@ def get_events():
 
     return json.dumps(events)
 
+
 @db_session
 def create_event(name):
     event = Event(name=name)
     return json.dumps(event.to_dict())
 
+
 @db_session
 def create_vote(name, event_id):
     vote = Vote(name=name, event=Event.get(id=event_id))
     return json.dumps(vote.to_dict())
+
 
 @db_session
 def delete_event(event_id):
@@ -143,6 +146,7 @@ def delete_event(event_id):
     name = event.name
     event.delete()
     return json.dumps('successfully deleted event: ' + name)
+
 
 @db_session
 def delete_vote(vote_id):
@@ -199,56 +203,52 @@ def root():
     return markdown.markdown(msg)
 
 
+@app.route('/event/', methods=['GET', 'POST'])
+def event_root():
+    if request.method == 'GET':
+        return get_events()
+    elif request.method == 'POST':
+        name = request.form['name']
+        return create_event(name)
+
+
+@app.route('/event/<int:event_id>', methods=['GET', 'POST', 'DELETE'])
+def specific_event(event_id=None):
+    if request.method == 'GET':
+        return get_event(event_id)
+    elif request.method == 'DELETE':
+        return delete_event(event_id)
+    elif request.method == 'POST':
+        action = request.form['action']
+        if action == 'reset':
+            return reset(event_id=event_id)
+
+
 @app.route('/vote/', methods=['GET', 'POST'])
+def vote_root():
+    if request.method == 'GET':
+        return get_votes()
+    elif request.method == 'POST':
+        event_id = request.form['event_id']
+        name = request.form['name']
+        return create_vote(name, event_id)
+
+
 @app.route('/vote/<int:vote_id>', methods=['GET', 'POST', 'DELETE'])
-def vote_route(vote_id=None):
-    # no vote id given, return all votes
-    if vote_id is None:
-        if request.method == 'GET':
-            return get_votes()
-        elif request.method == 'POST':
-            event_id = request.form['event_id']
-            name = request.form['name']
-            return create_vote(name, event_id)
-    # vote id is given and HTTP verb is GET. return individual vote
-    elif request.method == 'GET':
+def specific_vote(vote_id=None):
+    if request.method == 'GET':
         return get_vote(vote_id)
-    # vote id is given and HTTP verb is DELETE
     elif request.method == 'DELETE':
         return delete_vote(vote_id)
     # http method is POST, so we increment, decrement, or reset a vote and return the result
     elif request.method == 'POST':
         action = request.form['action']
-        # ensure action is either 'increment', 'decrement', or 'reset'
         if action == 'increment':
             return increment(vote_id)
         elif action == 'decrement':
             return decrement(vote_id)
         elif action == 'reset':
             return reset(vote_id=vote_id)
-
-
-@app.route('/event/', methods=['GET', 'POST'])
-@app.route('/event/<int:event_id>', methods=['GET', 'POST', 'DELETE'])
-def event_route(event_id=None):
-    # event id is not given so return all events
-    if event_id is None:
-        if request.method == 'GET':
-            return get_events()
-        elif request.method == 'POST':
-            name = request.form['name']
-            return create_event(name)
-    # HTTP GET method so return individual event
-    elif request.method == 'GET':
-        return get_event(event_id)
-    # DELETE event
-    elif request.method == 'DELETE':
-        return delete_event(event_id)
-    # reset event
-    elif request.method == 'POST':
-        action = request.form['action']
-        if action == 'reset':
-            return reset(event_id=event_id)
 
 
 if __name__ == "__main__":
