@@ -193,7 +193,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    with open('root.md') as fp:
+    with open('./root.md') as fp:
         return markdown.markdown(fp.read())
 
 
