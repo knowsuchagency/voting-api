@@ -74,7 +74,7 @@ Examples using curl are shown below. No authentication is currently required.
     curl http://voting-bamf.rhcloud.com/vote/1
     
     {
-      "count": 0,
+      "count": 1,
       "event": 1,
       "id": 1,
       "name": "Tinder for pets"
@@ -83,18 +83,60 @@ Examples using curl are shown below. No authentication is currently required.
 ### increment a vote
 
     curl http://voting-bamf.rhcloud.com/vote/1 -d "action=increment"
+    {
+      "count": 2, 
+      "event": 1, 
+      "id": 1, 
+      "name": "Tinder for pets"
+    }
     
 ### decrement a vote
 
     curl http://voting-bamf.rhcloud.com/vote/1 -d "action=decrement"
     
+    {
+      "count": 1, 
+      "event": 1, 
+      "id": 1, 
+      "name": "Tinder for pets"
+    }
+    
 ### reset a vote's count to zero
 
     curl http://voting-bamf.rhcloud.com/vote/1 -d "action=reset"
-    
+    {
+      "count": 0, 
+      "event": 1, 
+      "id": 1, 
+      "name": "Tinder for pets"
+    }
+
 ### reset all votes for a particular event
 
     curl http://voting-bamf.rhcloud.com/event/1 -d "action=reset"
+    {
+      "amount": 3, 
+      "votes": [
+        {
+          "count": 0, 
+          "event": 1, 
+          "id": 2, 
+          "name": "Facebook for babies"
+        }, 
+        {
+          "count": 0, 
+          "event": 1, 
+          "id": 3, 
+          "name": "Giant hamster wheel power generator"
+        }, 
+        {
+          "count": 0, 
+          "event": 1, 
+          "id": 1, 
+          "name": "Tinder for pets"
+        }
+      ]
+    }
     
 ### create a new event
 note: Event names must be unique. newName is just an example
