@@ -109,8 +109,8 @@ def decrement(vote_id):
 def get_event(event_id):
     event = Event.get(id=event_id)
     event_dict = event.to_dict()
-    votes_dict_list = [v.to_dict() for v in Vote.select(lambda v: v.event == event)]
-    event_dict['votes'] = votes_dict_list
+    event_dict['votes'] = [v.to_dict() for v in Vote.select(lambda v: v.event == event)]
+    event_dict['amount'] = len(event_dict['votes'])
     return json.dumps(event_dict)
 
 
@@ -133,20 +133,21 @@ def get_votes(event_id=None):
     else:
         votes = Vote.select(lambda v: v.event == Event.get(id=event_id))
 
-    return json.dumps([v.to_dict() for v in votes])
+    votes = [v.to_dict() for v in votes]
+
+    result = {'amount': len(votes), 'votes': votes}
+
+    return json.dumps(result)
 
 
 @db_session
 def get_events():
     """Return a json string of all events."""
-    events = []
-    for event in Event.select():
-        event_dict = event.to_dict()
-        votes_dict_list = [v.to_dict() for v in Vote.select(lambda v: v.event == event)]
-        event_dict['votes'] = votes_dict_list
-        events.append(event_dict)
 
-    return json.dumps(events)
+    events = [event.to_dict() for event in Event.select()]
+    result = {'amount': len(events), 'events': events}
+    return json.dumps(result)
+
 
 
 @db_session
@@ -273,5 +274,5 @@ def specific_vote(vote_id):
 
 
 if __name__ == "__main__":
-    seed()
+    # seed()
     app.run()
