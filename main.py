@@ -207,7 +207,7 @@ def reset(vote_id=None, event_id=None):
         vote.count = 0
 
     # return json of votes
-    return get_votes(event_id=event_id)
+    return get_event(event_id)
 
 
 # Set up flask

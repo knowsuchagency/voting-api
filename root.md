@@ -104,6 +104,7 @@ Examples using curl are shown below. No authentication is currently required.
 ### reset a vote's count to zero
 
     curl http://voting-bamf.rhcloud.com/vote/1 -d "action=reset"
+    
     {
       "count": 0, 
       "event": 1, 
@@ -114,6 +115,7 @@ Examples using curl are shown below. No authentication is currently required.
 ### reset all votes for a particular event
 
     curl http://voting-bamf.rhcloud.com/event/1 -d "action=reset"
+    
     {
       "amount": 3, 
       "votes": [
