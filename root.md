@@ -13,7 +13,7 @@ All following events have a semi-random name and 10 votes (possibly 9 due to nam
 Any GET request to the database will not change information in the database.
 
 In order to increment, decrement, or reset any specific votes, send a POST request to the appropriate endpoint with the specific action to be performed as a parameter in the form body i.e "action=increment".
-Any successful POST request will return the modified object in the request.
+Any successful POST request will return the modified object in the response.
 
 Examples using curl are shown below. No authentication is currently required.
 
