@@ -137,7 +137,9 @@ Examples using curl are shown below. No authentication is currently required.
           "id": 1, 
           "name": "Tinder for pets"
         }
-      ]
+      ], 
+      "id": 1, 
+      "name": "Terrible ideas hackathon"
     }
     
 ### create a new event
